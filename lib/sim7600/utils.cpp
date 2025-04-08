@@ -5,9 +5,9 @@ bool Utils::extractAfterColon(const char* buffer, char* result, int maxLen) {
     const char* start = strchr(buffer, ':');
     if (!start) return false;
 
-    start++; // avanzar después de ':'
+    start++; 
 
-    // Omitir espacios en blanco
+    
     while (*start == ' ') start++;
 
     int i = 0;
@@ -46,17 +46,16 @@ bool Utils::extractCSVValue(const char* buffer, int targetIndex, char* result, i
     return true;
 }
 
-// Extrae la parte entre las dos líneas +HTTPREAD:
 bool Utils::extractHttpJsonPayload(const char* buffer, char* result, int maxLen) {
     const char* start = strstr(buffer, "+HTTPREAD:");
     if (!start) return false;
 
-    // Buscar el salto de línea después del primer +HTTPREAD:
+    
     start = strchr(start, '\n');
     if (!start) return false;
-    start++; // saltar al comienzo de la línea del JSON
+    start++; 
 
-    // Buscar la segunda ocurrencia de +HTTPREAD:
+    
     const char* end = strstr(start, "+HTTPREAD:");
     if (!end) return false;
 
@@ -68,14 +67,13 @@ bool Utils::extractHttpJsonPayload(const char* buffer, char* result, int maxLen)
     return true;
 }
 
-// Extrae el tópico y el payload JSON de la respuesta CMQTTRX
 bool Utils::extractMqttTopicAndPayload(const char* buffer, char* topic, int topicLen, char* payload, int payloadLen) {
     const char* topicStart = strstr(buffer, "+CMQTTRXTOPIC:");
     if (!topicStart) return false;
 
     topicStart = strchr(topicStart, '\n');
     if (!topicStart) return false;
-    topicStart++; // saltar a la línea con el tópico
+    topicStart++; 
 
     const char* topicEnd = strchr(topicStart, '\n');
     if (!topicEnd) return false;
@@ -86,13 +84,13 @@ bool Utils::extractMqttTopicAndPayload(const char* buffer, char* topic, int topi
     strncpy(topic, topicStart, tLen);
     topic[tLen] = '\0';
 
-    // Buscar payload
+    
     const char* payloadStart = strstr(topicEnd, "+CMQTTRXPAYLOAD:");
     if (!payloadStart) return false;
 
     payloadStart = strchr(payloadStart, '\n');
     if (!payloadStart) return false;
-    payloadStart++; // Saltar a la línea con el JSON
+    payloadStart++; 
 
     const char* payloadEnd = strstr(payloadStart, "+CMQTTRXEND:");
     if (!payloadEnd) return false;
@@ -103,5 +101,25 @@ bool Utils::extractMqttTopicAndPayload(const char* buffer, char* topic, int topi
     strncpy(payload, payloadStart, pLen);
     payload[pLen] = '\0';
 
+    return true;
+}
+
+bool Utils::extractLineBetweenNewlines(const char* buffer, char* result, int maxLen) {
+    const char* firstNewline = strchr(buffer, '\n');
+    if (!firstNewline) return false;
+
+    const char* start = firstNewline + 1;
+
+    
+    if (*start == '\r') start++;
+
+    const char* end = strchr(start, '\n');
+    if (!end) return false;
+
+    int len = end - start;
+    if (len >= maxLen) len = maxLen - 1;
+
+    strncpy(result, start, len);
+    result[len] = '\0';
     return true;
 }

@@ -16,7 +16,6 @@ bool SslConfig::deleteCert(const char* name) {
     return celularRef.sendCommand(command, "OK", 2000);
 }
 
-
 bool SslConfig::downloadCert(const char* name, const uint8_t* data, int length) {
     char command[64];
     snprintf(command, sizeof(command), "AT+CCERTDOWN=\"%s\",%d", name, length);

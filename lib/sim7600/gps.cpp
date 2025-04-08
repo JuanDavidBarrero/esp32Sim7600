@@ -26,5 +26,6 @@ bool GPSModule::deactivateGPS()
 
  String GPSModule::getGPS()
 {
+    bool reponse = celularRef.sendCommand("AT+CGPSINFO","+CGPSINFO: ",3000);
     return String();
 }
