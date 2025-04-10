@@ -13,9 +13,9 @@ const uint8_t RX_PIN = 26;
 const uint8_t TX_PIN = 27;
 CelularModule cellularModule(BAUD_RATE, RX_PIN, TX_PIN);
 ConfigModule config(cellularModule);
-SmsClient smsClient(cellularModule);
+// SmsClient smsClient(cellularModule);
 // SslConfig sslClient(cellularModule);
-// GPSModule gps(cellularModule);
+GPSModule gpsClient(cellularModule);
 // HttpClientModule httpclient(cellularModule);
 // MqttClient mqttClient(cellularModule);
 
@@ -33,7 +33,37 @@ void setup()
   config.isReadySIM();
   config.setAPN("internet.comcel.com.co");
 
-  // delay(5000);
+  delay(5000);
+
+
+  Serial.println("\n\n\n=============================  GPS EXAMPLE =============================\r\n\n");
+
+
+  gpsClient.activeGPS();
+
+  if(gpsClient.isActiveGPS()){
+
+    Coordinates dataGPS;
+    Serial.println("\r\nEl gps esta activo\r\n");
+
+    while (!gpsClient.getGPS())
+    {
+      delay(1000);
+    }
+
+    dataGPS = gpsClient.getCoordinates();
+    Serial.println(dataGPS.latitude);
+    Serial.println(dataGPS.longitude);
+    
+
+  }
+
+  gpsClient.deactivateGPS();
+
+
+  Serial.println("\n\n\n=============================  END GPS EXAMPLE =============================\r\n\n");
+
+
 
   // Serial.println("\n\n\n=============================  SMS EXAMPLE =============================\r\n\n");
 

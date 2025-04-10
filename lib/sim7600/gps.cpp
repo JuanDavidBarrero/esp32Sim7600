@@ -5,27 +5,32 @@ GPSModule::GPSModule(CelularModule &celular): celularRef(celular){}
 
  bool GPSModule::activeGPS()
 {
-    bool reponse = celularRef.sendCommand("AT+CGPS=1","OK",1000);
-    Serial.println(celularRef.getResponse());
-    return reponse;
+    return celularRef.sendCommand("AT+CGPS=1","OK",1000);
 }
 
 bool GPSModule::deactivateGPS()
 {
-    bool reponse = celularRef.sendCommand("AT+CGPS=0","OK",1000);
-    Serial.println(celularRef.getResponse());
-    return reponse;
+    return celularRef.sendCommand("AT+CGPS=0","+CGPS: 0",5000);
+   
 }
 
  bool GPSModule::isActiveGPS()
 {
-    bool reponse = celularRef.sendCommand("AT+CGPS?","+CGPS: 1,1",2000);
-    Serial.println(celularRef.getResponse());
-    return reponse;
+    return celularRef.sendCommand("AT+CGPS?","+CGPS: 1,1",2000);
+ 
 }
 
- String GPSModule::getGPS()
+bool GPSModule::getGPS()
 {
-    bool reponse = celularRef.sendCommand("AT+CGPSINFO","+CGPSINFO: ",3000);
-    return String();
+    if (!celularRef.sendCommand("AT+CGPSINFO", "+CGPSINFO: ", 3000))
+        return false;
+
+    const char* data = celularRef.getResponse();
+    return Utils::parseGPGPSInfo(data, coords);
+}
+
+
+Coordinates GPSModule::getCoordinates()
+{
+    return coords;
 }
