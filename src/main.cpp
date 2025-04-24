@@ -41,7 +41,7 @@ bool loadAndSendCert(const char *path, const char *name)
   {
     buffer[i++] = file.read();
   }
-  buffer[i] = '\0'; 
+  buffer[i] = '\0';
 
   file.close();
 
@@ -65,11 +65,15 @@ void setup()
   const char *imei = config.getIMEI();
   Serial.print("El imei es ");
   Serial.println(imei);
+
   config.isReadySIM();
   config.setAPN("internet.comcel.com.co");
 
-  delay(5000);
+  config.setNTPServer("pool.ntp.org");
+  const char *date = config.getDate();
 
+  Serial.print("La hora y fecha es ");
+  Serial.println(date);
 
 
   // Serial.println("\n\n\n=============================  GPS EXAMPLE =============================\r\n\n");
@@ -138,7 +142,6 @@ void setup()
   //     Serial.println("Error al montar SPIFFS");
   //     return;
   //   }
-  
 
   // loadAndSendCert("/cacert.pem", "cacert.pem");
   // loadAndSendCert("/cert.crt", "cert.crt");

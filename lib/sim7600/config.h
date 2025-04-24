@@ -12,6 +12,8 @@ class ConfigModule {
         bool setAPN(const char *apn);
         void configCelular();
         const char* getIMEI();
+        bool setNTPServer(const char *server);
+        const char* getDate();
     
     private:
         CelularModule& celularRef;

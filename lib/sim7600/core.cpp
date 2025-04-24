@@ -68,17 +68,17 @@ bool CelularModule::sendCommand(const char* command, const char* expectedRespons
     while (state != FAILURE) {
         switch (state) {
             case SEND:
-                Serial.print("command -> ");
-                Serial.println(command);
+                // Serial.print("command -> ");
+                // Serial.println(command);
                 sendRaw(command,newline);
                 state = WAIT;
                 break;
 
             case WAIT:
                 readResponse(expectedResponse, timeout);
-                Serial.print("mResponse -> ");
-                Serial.println(mResponse);
-                Serial.print("================ \n\n");
+                // Serial.print("mResponse -> ");
+                // Serial.println(mResponse);
+                // Serial.print("================ \n\n");
 
                 if (strstr(mResponse, expectedResponse) != nullptr) {
                     state = SUCCESS;

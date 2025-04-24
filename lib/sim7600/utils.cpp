@@ -158,6 +158,33 @@ static void formatDateTime(const char* date, const char* time, char* output, siz
     snprintf(output, len, "%s:%s:%s %s/%s/%s", hour, minute, second, day, month, year);
 }
 
+bool Utils::extractDateTimeFromCCLK(const char* buffer, char* result, int maxLen) {
+    const char* cclkStart = strstr(buffer, "+CCLK:");
+    if (!cclkStart) return false;
+
+    const char* quoteStart = strchr(cclkStart, '\"');
+    if (!quoteStart) return false;
+    quoteStart++; // Skip opening quote
+
+    const char* plusSign = strchr(quoteStart, '+');
+    if (!plusSign) return false;
+
+    int len = plusSign - quoteStart; // up to but not including '+'
+    if (len <= 0 || len >= maxLen) return false;
+
+    char temp[64];
+    strncpy(temp, quoteStart, len);
+    temp[len] = '\0';
+
+    // Replace comma with space
+    char* comma = strchr(temp, ',');
+    if (comma) *comma = ' ';
+
+    strncpy(result, temp, maxLen);
+    result[maxLen - 1] = '\0';
+    return true;
+}
+
 bool Utils::parseGPGPSInfo(const char* buffer, Coordinates& result) {
     char temp[128];
     std::strncpy(temp, buffer, sizeof(temp));
